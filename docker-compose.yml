@@ -1,0 +1,28 @@
+name: g7s-task
+services:
+  php:
+    image: yiisoftware/yii2-php:7.4-apache
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ./:/app:delegated
+    ports:
+      - '8000:80'
+  db:
+    image: arm64v8/mysql
+    restart: always
+    container_name: g7s-task-db
+    volumes:
+        - mysql-data:/var/lib/mysql
+        - ./runtime/logs:/var/log/mysql
+    environment:
+        # MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        MYSQL_RANDOM_ROOT_PASSWORD: yes
+        MYSQL_DATABASE: ${DB_DATABASE}
+        MYSQL_USER: ${DB_USERNAME}
+        MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+        - ${DB_PORT}:3306
+
+volumes:
+    mysql-data:
+      name: pickup-word_mysql-data
