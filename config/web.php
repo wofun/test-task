@@ -51,21 +51,28 @@ $config = [
         ],
         'authManager' => [
             'class' => 'dektrium\rbac\components\DbManager',
-            'defaultRoles' => ['guest'],
+            'defaultRoles' => ['admin', 'user'],
         ],
-
+        'view' => [
+            'theme' => [
+                'pathMap' => [
+                    '@app/views' => '@vendor/hail812/yii2-adminlte3/src/views'
+                ],
+            ],
+        ],
     ],
     'modules' => [
         'user' => [
             'class' => 'dektrium\user\Module',
             'enableUnconfirmedLogin' => false,
             'enableConfirmation' => true,
-            'enableRegistration' => false,
+            // 'enableRegistration' => false,
             'confirmWithin' => 21600,
             'rememberFor' => 3600 * 12,
-            // 'adminPermission' => '/admin-users',
+            'adminPermission' => '/settings',
             'cost' => 12,
-            'admins' => ['admin']
+            'admins' => ['admin'],
+            'urlPrefix' => 'admin',
         ],
         'rbac' => 'dektrium\rbac\RbacWebModule',
     ],

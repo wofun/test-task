@@ -199,8 +199,8 @@ TODO: Install documentation
 CREATE DATABASE `g7s-db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 ### Create the database user
-CREATE USER `g7s-user`@`%` IDENTIFIED BY '12ejp1^2ehr_#901142-890afj-23';
-GRANT ALL PRIVILEGES ON `g7s-db`.* TO `g7s-user`@`%`;
+CREATE USER `g7s-user`@`localhost` IDENTIFIED BY '12ejp1^2ehr_#901142-890afj-23';
+GRANT ALL PRIVILEGES ON `g7s-db`.* TO `g7s-user`@`localhost`  WITH GRANT OPTION;
 
 ### Run dektrium/yii2-user migration
 php yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations

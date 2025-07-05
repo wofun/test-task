@@ -1,5 +1,4 @@
 <?php
-
 return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=' . env('DB_HOST') . ':' . env('DB_PORT') . ';dbname=' . env('DB_DATABASE'),
