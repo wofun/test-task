@@ -71,12 +71,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/RobinHerbots/Inputmask.git",
-                "reference": "f9413525a890bde37aa7a45eaa0e74dd1f8a56c5"
+                "reference": "55dcd7e87bc74bbd9cdd67669fa6a6a589ba98eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RobinHerbots/Inputmask/zipball/f9413525a890bde37aa7a45eaa0e74dd1f8a56c5",
-                "reference": "f9413525a890bde37aa7a45eaa0e74dd1f8a56c5"
+                "url": "https://api.github.com/repos/RobinHerbots/Inputmask/zipball/55dcd7e87bc74bbd9cdd67669fa6a6a589ba98eb",
+                "reference": "55dcd7e87bc74bbd9cdd67669fa6a6a589ba98eb"
             },
             "require": {
                 "bower-asset/jquery": ">=1.7"
@@ -3896,12 +3896,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "1720ddd719e16cf0db4eb1c6eca108031636d46c"
+                "reference": "faed855a7b5f4d4637717c2b3863e277116beb36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/1720ddd719e16cf0db4eb1c6eca108031636d46c",
-                "reference": "1720ddd719e16cf0db4eb1c6eca108031636d46c",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/faed855a7b5f4d4637717c2b3863e277116beb36",
+                "reference": "faed855a7b5f4d4637717c2b3863e277116beb36",
                 "shasum": ""
             },
             "require": {
@@ -3941,7 +3941,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.1"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.3"
             },
             "funding": [
                 {
@@ -3949,7 +3949,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-29T12:36:36+00:00"
+            "time": "2025-07-05T12:25:42+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -4015,12 +4015,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phar-io/manifest.git",
-                "reference": "54750ef60c58e43759730615a392c31c80e23176"
+                "reference": "65f90285728eae4eae313b8b6ba11b2f5436038e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/manifest/zipball/54750ef60c58e43759730615a392c31c80e23176",
-                "reference": "54750ef60c58e43759730615a392c31c80e23176",
+                "url": "https://api.github.com/repos/phar-io/manifest/zipball/65f90285728eae4eae313b8b6ba11b2f5436038e",
+                "reference": "65f90285728eae4eae313b8b6ba11b2f5436038e",
                 "shasum": ""
             },
             "require": {
@@ -4067,7 +4067,7 @@
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
             "support": {
                 "issues": "https://github.com/phar-io/manifest/issues",
-                "source": "https://github.com/phar-io/manifest/tree/2.0.4"
+                "source": "https://github.com/phar-io/manifest/tree/master"
             },
             "funding": [
                 {
@@ -4075,7 +4075,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-03T12:33:53+00:00"
+            "time": "2025-07-05T08:48:25+00:00"
         },
         {
             "name": "phar-io/version",
@@ -4494,12 +4494,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "fed04de5f4be1cf726eb3ffc1424b559f8359583"
+                "reference": "ccc7c29584440e29c284b88790bd49732234d177"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fed04de5f4be1cf726eb3ffc1424b559f8359583",
-                "reference": "fed04de5f4be1cf726eb3ffc1424b559f8359583",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ccc7c29584440e29c284b88790bd49732234d177",
+                "reference": "ccc7c29584440e29c284b88790bd49732234d177",
                 "shasum": ""
             },
             "require": {
@@ -4597,7 +4597,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-02T06:45:23+00:00"
+            "time": "2025-07-04T19:56:05+00:00"
         },
         {
             "name": "psr/http-factory",

@@ -47,11 +47,22 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [],
+            'rules' => require __DIR__ . '/routes.php',
         ],
         'authManager' => [
             'class' => 'dektrium\rbac\components\DbManager',
             'defaultRoles' => ['admin', 'user'],
+        ],
+        'assetManager' => [
+            'class' => 'yii\web\AssetManager',
+            'bundles' => [
+                'yii\bootstrap\BootstrapAsset' => [
+                    'css' => [],
+                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js' => [],
+                ],
+            ],
         ],
         'view' => [
             'theme' => [
@@ -69,9 +80,9 @@ $config = [
             // 'enableRegistration' => false,
             'confirmWithin' => 21600,
             'rememberFor' => 3600 * 12,
-            'adminPermission' => '/settings',
+            'adminPermission' => 'admin',
             'cost' => 12,
-            'admins' => ['admin'],
+            // 'admins' => ['admin'],
             'urlPrefix' => 'admin',
         ],
         'rbac' => 'dektrium\rbac\RbacWebModule',

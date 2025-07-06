@@ -6,7 +6,6 @@ $this->title = 'Admin panel';
 ?>
 
 <div class="container-fluid">
-
     <div class="row">
         <div class="col-lg-6">
             <?= \hail812\adminlte\widgets\Callout::widget([

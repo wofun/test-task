@@ -1,5 +1,9 @@
 <?php
 
+use app\assets\AppAsset;
+
+AppAsset::register($this);
+
 /* @var $this \yii\web\View */
 /* @var $content string */
 
@@ -29,8 +33,10 @@ $this->registerCssFile('https://code.ionicframework.com/ionicons/2.0.1/css/ionic
             <a href="<?= Yii::$app->homeUrl ?>"><?= env('APP_NAME') ?></a>
         </div>
         <!-- /.login-logo -->
+        <div>
+            <?= $content ?>
 
-        <?= $content ?>
+        </div>
     </div>
     <!-- /.login-box -->
 
