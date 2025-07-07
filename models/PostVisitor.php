@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\data\ActiveDataProvider;
 
 /**
  * This is the model class for table "posts_visitors".
@@ -68,8 +69,23 @@ class PostVisitor extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getVisitor()
+    public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'id_visitor']);
+    }
+
+    static public function getDataProvider(int $postId)
+    {
+        return new ActiveDataProvider([
+            'query' => self::find()->with(['user'])->where(['id_post' => $postId]),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'view_at' => SORT_DESC,
+                ]
+            ],
+        ]);
     }
 }

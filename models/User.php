@@ -61,4 +61,14 @@ class User extends \dektrium\user\models\User implements \yii\web\IdentityInterf
     {
         return $this->password === $password;
     }
+
+    /**
+     * Gets query for [[Profile]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::class, ['user_id' => 'id']);
+    }
 }

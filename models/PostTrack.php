@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\data\ActiveDataProvider;
 
 /**
  * This is the model class for table "posts_track".
@@ -71,5 +72,21 @@ class PostTrack extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'id_user']);
+    }
+
+
+    static public function getDataProvider(int $postId)
+    {
+        return new ActiveDataProvider([
+            'query' => self::find()->with(['user'])->where(['id_post' => $postId]),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'track_at' => SORT_DESC,
+                ]
+            ],
+        ]);
     }
 }

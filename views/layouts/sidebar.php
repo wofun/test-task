@@ -18,7 +18,7 @@ $isUserModuleInstalled = true;
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
 
-                    ['label' => 'Posts', 'url' => ['/post/index'], 'active' => \Yii::$app->requestedRoute === 'post/index'],
+                    ['label' => 'Posts', 'url' => ['/post/index'], 'active' => (Yii::$app->controller->id === 'post' && Yii::$app->controller->action->id === 'index')],
                     [
                         'label' => \Yii::t('rbac', 'RBAC'),
                         'header' => true,

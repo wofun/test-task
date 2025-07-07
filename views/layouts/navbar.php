@@ -19,7 +19,7 @@ use yii\bootstrap\Nav;
             <a href="<?= Url::home() ?>" class="nav-link <?= Yii::$app->requestedRoute === '' ? 'active' : '' ?>">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="<?= Url::to(['/post/index']) ?>" class="nav-link <?= Yii::$app->requestedRoute === 'post/index' ? 'active' : '' ?>">Posts</a>
+            <a href="<?= Url::to(['/post/index']) ?>" class="nav-link <?= (Yii::$app->controller->id === 'post') ? 'active' : '' ?>">Posts</a>
         </li>
         <li class="nav-item dropdown">
             <a id="sidebarSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">RBAC</a>

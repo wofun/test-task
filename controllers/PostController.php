@@ -2,12 +2,15 @@
 
 namespace app\controllers;
 
-use Yii;
+use app\models\Post;
+use app\models\PostSearch;
+use app\models\PostTrack;
+use app\models\PostVisitor;
 use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\ContactForm;
+use yii\web\Controller;
+use Yii;
+use yii\web\NotFoundHttpException;
 
 class PostController extends Controller
 {
@@ -31,9 +34,30 @@ class PostController extends Controller
         ];
     }
 
+
     public function actionIndex()
     {
+        $searchModel = new PostSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
         return $this->render('index');
+    }
+
+
+    public function actionView(int $id)
+    {
+        $data = Post::findOne($id);
+        if (!$data) {
+            throw new NotFoundHttpException('Post not found');
+        }
+        return $this->render('view', [
+            'post' => $data,
+            'visitorsProvider' => PostVisitor::getDataProvider($id),
+            'trackProvider' => PostTrack::getDataProvider($id),
+        ]);
     }
 }

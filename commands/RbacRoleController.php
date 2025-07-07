@@ -19,7 +19,9 @@ class RbacRoleController extends Controller
     {
         $auth = Yii::$app->authManager;
         $item = $auth->getRole($role);
-        $auth->assign($item, $uid);
+        $result = $auth->assign($item, $uid);
+
+        echo "Info: " . $result;
 
         return ExitCode::OK;
     }

@@ -23,6 +23,8 @@ class m250706_082149_create_posts_table extends Migration
 
         $this->createIndex('created_by_idx', '{{%posts}}', 'created_by');
         $this->addForeignKey('posts_user_fk', '{{%posts}}', 'created_by', 'user', 'id', null, 'CASCADE');
+
+        $this->execute("CREATE FULLTEXT INDEX `post_text_idx` ON posts (`name`)");
     }
 
     /**
@@ -30,6 +32,8 @@ class m250706_082149_create_posts_table extends Migration
      */
     public function safeDown()
     {
+        $this->dropIndex('post_text_idx', '{{%posts}}');
+
         $this->dropForeignKey('posts_user_fk', '{{%posts}}');
         $this->dropIndex('created_by_idx', '{{%posts}}');
 

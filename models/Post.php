@@ -22,8 +22,6 @@ use Yii;
  */
 class Post extends \yii\db\ActiveRecord
 {
-
-
     /**
      * {@inheritdoc}
      */
@@ -68,7 +66,7 @@ class Post extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCreatedBy()
+    public function getCreator()
     {
         return $this->hasOne(User::class, ['id' => 'created_by']);
     }
@@ -78,7 +76,7 @@ class Post extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getPostTracks()
+    public function getPostTracksAssn()
     {
         return $this->hasMany(PostTrack::class, ['id_post' => 'id']);
     }
@@ -88,7 +86,7 @@ class Post extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getPostVisitors()
+    public function getPostVisitorsAssn()
     {
         return $this->hasMany(PostVisitor::class, ['id_post' => 'id']);
     }
@@ -98,7 +96,7 @@ class Post extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsers()
+    public function getSubscribers()
     {
         return $this->hasMany(User::class, ['id' => 'id_user'])->viaTable('posts_track', ['id_post' => 'id']);
     }
