@@ -48,7 +48,6 @@ use yii\bootstrap\Nav;
     </ul>
 
     <?php if (!Yii::$app->user->isGuest): ?>
-        <?php Yii::debug(Yii::$app->user->getIdentity()) ?>
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
             <li class="nav-item nav-link" style="padding-top:12px;">Hello, <?= Yii::$app->user->getIdentity()->username ?></li>

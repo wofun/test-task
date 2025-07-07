@@ -12,6 +12,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
+        '@console' => '@app'
     ],
     'components' => [
         'cache' => [
@@ -40,13 +41,12 @@ $config = [
         ],
         'rbac' => 'dektrium\rbac\RbacConsoleModule',
     ],
-    /*
+
     'controllerMap' => [
         'fixture' => [ // Fixture generation command line.
             'class' => 'yii\faker\FixtureController',
         ],
     ],
-    */
 ];
 
 if (YII_ENV_DEV) {

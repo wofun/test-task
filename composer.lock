@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1ceca8246b41afb8e59576972c32d034",
+    "content-hash": "459b7216aa640de8aa3cb376da381241",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -6725,7 +6725,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "dektrium/yii2-rbac": 20,
-        "dektrium/yii2-user": 20
+        "dektrium/yii2-user": 20,
+        "yiisoft/yii2-faker": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
