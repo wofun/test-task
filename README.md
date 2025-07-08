@@ -11,12 +11,12 @@ INSTALLATION
 ------------
 Clone git project:
 ~~~
-    git clone https://github.com/wofun/test-task ./
+git clone https://github.com/wofun/test-task ./
 ~~~
 
 Update dependencies with Composer:
 ~~~
-    composer update  
+composer update
 ~~~
 
 
@@ -25,7 +25,7 @@ CONFIGURATION
 
 Copy the `.env.example` configuration file:
 ~~~
-    cp .env.example .env
+cp .env.example .env
 ~~~
 
 Edit the following `.env` file settings:
@@ -36,52 +36,67 @@ DB_USERNAME='your_database_user'
 DB_PASSWORD='user_password'
 ```
 
+
+RUN DOCKER
+-------------
 Run docker containers:
+
+ONLY for MacOS chip M1 and more:
 ~~~
-    docker compose -f docker-compose.arm64v8.yml -f docker-compose.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.arm64v8.yml up -d 
 ~~~
 
-Exec bash of the server container 
+In other situations:
 ~~~
-    # Run docker container bash
-    sh bash.sh
+docker compose up -d
 ~~~
 
+Exec bash of the server container:
+~~~
+sh bash.sh
+~~~
+
+DATABASE
+-------------
 Run migrations:
 ~~~
-    # Run dektrium/yii2-user migrations
-    ./yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
+# Run dektrium/yii2-user migrations
+./yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
 
-    # Run yii2-rbac migrations
-    ./yii migrate/up --migrationPath=@yii/rbac/migrations
+# Run yii2-rbac migrations
+./yii migrate/up --migrationPath=@yii/rbac/migrations
 
-    # Run custom rbac migrations
-    ./yii migrate --migrationPath=@app/rbac/migrations
+# Run custom rbac migrations
+./yii migrate --migrationPath=@app/rbac/migrations
 
-    # Run app migrations
-    ./yii migrate
+# Run app migrations
+./yii migrate
 ~~~
 
-Database seeding.
-Наповнення бази даних проходить відповідно до вимог ТЗ. Це тривалий процес, і може зайняти більше двох годин:
+Наповнення бази даних проходить відповідно до вимог ТЗ. Це тривалий процес, і може зайняти більше двох годин.
+Database seeding:
 ~~~
-    ./yii seeder
+./yii seeder
 ~~~
 
 Допоки наповнюється база даних, можно створити адміністратора і залогінитись у адмінку. Для цього відкриваємо окрему вкладку терміналу, та запускаємо bash контейнера сервера.
+
+CREATING AN ADMINISTRATOR
+
+Exec bash of server container:
 ~~~
-    sh bash.sh
+sh bash.sh
 ~~~
 
 Create an administrator.
 
 Replace placeholders with your own data:
 ```php
-    # Create a user
-    ./yii user/create YOUR_USER_EMAIL YOUR_USER_LOGIN YOUR_USER_PASSWORD
+# Create a user
+./yii user/create YOUR_USER_EMAIL YOUR_USER_LOGIN YOUR_USER_PASSWORD
 
-    # Assign  administrator permissions
-    ./yii rbac-role/assign YOUR_USER_EMAIL admin
+# Assign  administrator permissions
+./yii rbac-role/assign YOUR_USER_EMAIL admin
 ```
 
 You can then access the application through the following URL:

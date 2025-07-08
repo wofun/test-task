@@ -1,16 +1,4 @@
-name: g7s-task
-services:
-  php:
-    image: yiisoftware/yii2-php:7.4-apache
-    container_name: g7s-task-server
-    volumes:
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      - ./:/app:delegated
-      - ./custom.php.ini:/usr/local/etc/php/conf.d/custom.ini
-    ports:
-      - "8000:80"
-    depends_on:
-      - db
+services:  
   db:
     image: arm64v8/mysql:8.4
     platform: linux/arm64
@@ -26,6 +14,3 @@ services:
         MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
         - "33063:3306"
-
-volumes:
-    mysql-data:
