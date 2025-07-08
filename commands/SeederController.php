@@ -24,7 +24,6 @@ class SeederController extends Controller
 {
     public function init()
     {
-        ini_set('memory_limit', '512M');
         Yii::setLogger(new EmptyLogger());
     }
 
