@@ -65,7 +65,7 @@ class RbacRoleController extends Controller
         }
 
         if ($auth->revoke($item, $user->id)) {
-            echo "The role is revoked" . PHP_EOL;
+            echo "The role was revoked" . PHP_EOL;
         } else {
             echo "The role was not assigned" . PHP_EOL;
         }

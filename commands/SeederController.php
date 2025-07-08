@@ -7,6 +7,7 @@ use app\components\faker_data_generators\Post as PostGenerator;
 use app\components\faker_data_generators\PostVisitor as PostVisitorGenerator;
 use app\components\faker_data_generators\User as UserGenerator;
 use app\components\faker_data_generators\PostTrack as PostTrackGenerator;
+use app\models\AuthAssignment;
 use app\models\Post;
 use app\models\PostTrack;
 use app\models\PostVisitor;
@@ -36,8 +37,7 @@ class SeederController extends Controller
     {
         $this->actionUsers(100000);
 
-        $this->actionPosts(100000);
-        // $this->actionPosts(1000000);
+        $this->actionPosts(1000000);
 
         $this->actionPostsVisitors();
 
@@ -62,7 +62,8 @@ class SeederController extends Controller
         $tableName = User::tableName();
         $dataGenerator = new UserGenerator($amount);
 
-        $this->truncateTable(Profile::tableName(), true);
+        $this->truncateTable(AuthAssignment::tableName());
+        $this->truncateTable(Profile::tableName());
         $this->truncateTable($tableName, true);
 
         echo "Seeding the {$tableName} table ";

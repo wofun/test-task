@@ -51,16 +51,15 @@ $config = [
         ],
         'authManager' => [
             'class' => 'dektrium\rbac\components\DbManager',
-            'defaultRoles' => ['admin', 'user'],
         ],
         'assetManager' => [
             'class' => 'yii\web\AssetManager',
             'bundles' => [
                 'yii\bootstrap\BootstrapAsset' => [
-                    'css' => [],
+                    'css' => [],    // Fix style conflicts
                 ],
                 'yii\bootstrap\BootstrapPluginAsset' => [
-                    'js' => [],
+                    'js' => [],     // Fix JS conflicts
                 ],
             ],
         ],
@@ -77,12 +76,12 @@ $config = [
             'class' => 'dektrium\user\Module',
             'enableUnconfirmedLogin' => false,
             'enableConfirmation' => true,
-            // 'enableRegistration' => false,
+            'enableRegistration' => false,
             'confirmWithin' => 21600,
             'rememberFor' => 3600 * 12,
-            'adminPermission' => 'admin',
             'cost' => 12,
-            // 'admins' => ['admin'],
+            //'admins' => ['admin'], // Sets administrators by username
+            'adminPermission' => 'admin', // Sets the administrator role by role name
             'urlPrefix' => 'admin',
         ],
         'rbac' => 'dektrium\rbac\RbacWebModule',

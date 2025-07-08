@@ -9,8 +9,8 @@ use app\models\PostVisitor;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use Yii;
 use yii\web\NotFoundHttpException;
+use Yii;
 
 class PostController extends Controller
 {
@@ -22,12 +22,10 @@ class PostController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index'],
                 'rules' => [
                     [
-                        'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['managePost'],
                     ],
                 ],
             ],
