@@ -12,8 +12,8 @@ services:
     depends_on:
       - db
   db:
-    image: mysql:8.4
-    platform: linux/amd64
+    image: arm64v8/mysql:8.4
+    platform: linux/arm64
     restart: always
     container_name: g7s-task-db
     volumes:
