@@ -11,7 +11,7 @@ INSTALLATION
 ------------
 Clone git project:
 ~~~
-git clone https://github.com/wofun/test-task ./
+git clone https://github.com/wofun/test-task.git ./
 ~~~
 
 Update dependencies with Composer:
@@ -43,7 +43,7 @@ Run docker containers:
 
 ONLY for MacOS chip M1 and more:
 ~~~
-docker compose -f docker-compose.yml -f docker-compose.arm64v8.yml up -d 
+docker compose -f docker-compose.yml -f docker-compose.arm64.yml up -d 
 ~~~
 
 In other situations:
