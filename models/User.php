@@ -27,7 +27,7 @@ class User extends \dektrium\user\models\User implements \yii\web\IdentityInterf
 
     public static function findByEmail($email)
     {
-        return static::findOne(['email' => $email, 'role' => [static::ROLE_USER, static::ROLE_ADMIN]]);
+        return static::findOne(['email' => $email]);
     }
 
     public static function findByAuthKey($key)
