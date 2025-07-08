@@ -81,3 +81,4 @@ Create a administrator user (replace placeholders with your own data):
 
 You can then access the application through the following URL:
     http://127.0.0.1:8000
+# test-task
