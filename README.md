@@ -56,37 +56,43 @@ Run bash of the server container:
 sh bash.sh
 ~~~
 
-Run migrations:
+Run dektrium/yii2-user migrations:
 ~~~
-#Run dektrium/yii2-user migrations:
 ./yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
+~~~
 
-#Run RBAC migrations:
+Run yii2-rbac migrations:
+~~~
 ./yii migrate/up --migrationPath=@yii/rbac/migrations
-./yii rbac/migrate
+~~~
 
-#Run app migrations:
+Run init RBAC migrations:
+~~~
+./yii rbac/migrate
+~~~
+
+Run app migrations:
+~~~
 ./yii migrate
 ~~~
 
-Наповнення бази даних проходить відповідно до вимог ТЗ. Це тривалий процес, і може зайняти більше двох годин.
 Database seeding:
 ~~~
 ./yii seeder
 ~~~
 
+Наповнення бази даних проходить відповідно до вимог ТЗ. Це тривалий процес, і може зайняти більше двох годин.
+
 Допоки наповнюється база даних, можно створити адміністратора і залогінитись у адмінку. Для цього відкриваємо окрему вкладку терміналу, та запускаємо bash контейнера сервера.
 
 CREATING AN ADMINISTRATOR
-
+-------------
 Run bash of the server container:
 ~~~
 sh bash.sh
 ~~~
 
-Create an administrator.
-
-Replace placeholders with your own data:
+Create an administrator. Replace placeholders with your own data:
 ```php
 # Create a user
 ./yii user/create YOUR_USER_EMAIL YOUR_USER_LOGIN YOUR_USER_PASSWORD

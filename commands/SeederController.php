@@ -7,6 +7,7 @@ use app\components\faker_data_generators\Post as PostGenerator;
 use app\components\faker_data_generators\PostVisitor as PostVisitorGenerator;
 use app\components\faker_data_generators\User as UserGenerator;
 use app\components\faker_data_generators\PostTrack as PostTrackGenerator;
+use app\helpers\DbHelper;
 use app\models\AuthAssignment;
 use app\models\Post;
 use app\models\PostTrack;
@@ -25,6 +26,12 @@ class SeederController extends Controller
     public function init()
     {
         Yii::setLogger(new EmptyLogger());
+        DbHelper::disableForeignKeyChecks();
+    }
+
+    public function __destruct()
+    {
+        DbHelper::enableForeignKeyChecks();
     }
 
     /**
@@ -34,13 +41,12 @@ class SeederController extends Controller
      */
     public function actionIndex()
     {
+        // $time = time();
         $this->actionUsers(100000);
-
         $this->actionPosts(1000000);
-
         $this->actionPostsVisitors();
-
         $this->actionPostsTrack();
+        // echo 'The process took ' . date('H:i:s', (time() - $time)) . PHP_EOL;
 
         return ExitCode::OK;
     }
@@ -122,6 +128,7 @@ class SeederController extends Controller
         echo PHP_EOL;
 
         $this->showInsertedInfo($tableName, $inserted);
+
         return ExitCode::OK;
     }
 
@@ -143,7 +150,7 @@ class SeederController extends Controller
         echo "Seeding the {$tableName} table ";
 
         foreach (
-            $dataGenerator($amountPerBatch = 1000, [
+            $dataGenerator($amountPerBatch = 25000, [
                 'postIdFrom' => Post::find()->min('id'),
                 'postIdTo' =>  Post::find()->max('id'),
                 'userIdFrom' => User::find()->min('id'),
@@ -189,7 +196,7 @@ class SeederController extends Controller
 
         foreach (
             $dataGenerator(
-                $amountPerBatch = 1000,
+                $amountPerBatch = 25000,
                 [
                     'postIdFrom' => Post::find()->min('id'),
                     'postIdTo' => Post::find()->max('id'),
@@ -229,16 +236,8 @@ class SeederController extends Controller
      */
     private function truncateTable(string $tableName, bool $disableForeignKeyChecks = false)
     {
-        if ($disableForeignKeyChecks) {
-            Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS=0;')->execute();
-        }
-
-        Yii::$app->db->createCommand()->truncateTable($tableName)->execute();
+        DbHelper::truncateTable($tableName, false);
         echo "The {$tableName} table was truncated" . PHP_EOL;
-
-        if ($disableForeignKeyChecks) {
-            Yii::$app->db->createCommand('SET FOREIGN_KEY_CHECKS=1;')->execute();
-        }
     }
 
 
