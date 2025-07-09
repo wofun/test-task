@@ -29,7 +29,6 @@ cp .env.example .env
 ~~~
 
 Edit the following `.env` file settings:
-
 ```php
 DB_DATABASE='your_database_name'
 DB_USERNAME='your_database_user'
@@ -39,8 +38,6 @@ DB_PASSWORD='user_password'
 
 RUN DOCKER
 -------------
-Run docker containers:
-
 ONLY for MacOS chip M1 and more:
 ~~~
 docker compose -f docker-compose.yml -f docker-compose.arm64.yml up -d 
@@ -51,25 +48,24 @@ In other situations:
 docker compose up -d
 ~~~
 
-Exec bash of the server container:
+
+DATABASE
+-------------
+Run bash of the server container:
 ~~~
 sh bash.sh
 ~~~
 
-DATABASE
--------------
 Run migrations:
 ~~~
-# Run dektrium/yii2-user migrations
+#Run dektrium/yii2-user migrations:
 ./yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
 
-# Run yii2-rbac migrations
+#Run RBAC migrations:
 ./yii migrate/up --migrationPath=@yii/rbac/migrations
+./yii rbac/migrate
 
-# Run custom rbac migrations
-./yii migrate --migrationPath=@app/rbac/migrations
-
-# Run app migrations
+#Run app migrations:
 ./yii migrate
 ~~~
 
@@ -83,7 +79,7 @@ Database seeding:
 
 CREATING AN ADMINISTRATOR
 
-Exec bash of server container:
+Run bash of the server container:
 ~~~
 sh bash.sh
 ~~~
