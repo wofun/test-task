@@ -19,6 +19,10 @@ Update dependencies with Composer:
 composer update
 ~~~
 
+Remove "adminlte3" templates:
+~~~
+rm -rf ./vendor/hail812/yii2-adminlte3/src/views
+~~~
 
 CONFIGURATION
 -------------
@@ -34,7 +38,6 @@ DB_DATABASE='your_database_name'
 DB_USERNAME='your_database_user'
 DB_PASSWORD='user_password'
 ```
-
 
 RUN DOCKER
 -------------
@@ -101,6 +104,8 @@ Assign administrator permissions:
 ```php
 ./yii rbac-role/assign YOUR_USER_EMAIL admin
 ```
+
+
 
 You can then access the application through the following URL:
     http://127.0.0.1:8000

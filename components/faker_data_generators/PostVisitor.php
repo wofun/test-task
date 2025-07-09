@@ -20,7 +20,6 @@ class PostVisitor extends BaseGenerator
                 if (count($data) === $amountPerBatch) {
                     yield $data;
                     $data = [];
-                    break;
                 }
             }
         }
