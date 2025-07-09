@@ -92,12 +92,13 @@ Run bash of the server container:
 sh bash.sh
 ~~~
 
-Create an administrator. Replace placeholders with your own data:
+Create a user (Replace placeholders with your own data):
 ```php
-# Create a user
 ./yii user/create YOUR_USER_EMAIL YOUR_USER_LOGIN YOUR_USER_PASSWORD
+```
 
-# Assign  administrator permissions
+Assign administrator permissions:
+```php
 ./yii rbac-role/assign YOUR_USER_EMAIL admin
 ```
 
