@@ -88,4 +88,20 @@ class PostVisitor extends \yii\db\ActiveRecord
             ],
         ]);
     }
+
+    static public function dropIndexesAndForeignKeys()
+    {
+        Yii::$app->db->createCommand("ALTER TABLE " . self::tableName() . " DROP FOREIGN KEY posts_visitors_user_fk;")->execute();
+        Yii::$app->db->createCommand("DROP INDEX id_visitor_idx ON " . self::tableName() . ";")->execute();
+        Yii::$app->db->createCommand("ALTER TABLE " . self::tableName() . " DROP FOREIGN KEY posts_visitors_post_fk;")->execute();
+        Yii::$app->db->createCommand("DROP INDEX id_post_idx ON " . self::tableName() . ";")->execute();
+    }
+
+    static public function addIndexesAndForeignKeys()
+    {
+        Yii::$app->db->createCommand("CREATE INDEX id_visitor_idx ON " . self::tableName() . "(id_visitor);")->execute();
+        Yii::$app->db->createCommand("CREATE INDEX id_post_idx ON " . self::tableName() . "(id_post);")->execute();
+        Yii::$app->db->createCommand("ALTER TABLE " . self::tableName() . " ADD CONSTRAINT posts_visitors_post_fk FOREIGN KEY (id_post) REFERENCES posts(id);")->execute();
+        Yii::$app->db->createCommand("ALTER TABLE " . self::tableName() . " ADD CONSTRAINT posts_visitors_user_fk FOREIGN KEY (id_visitor) REFERENCES user(id);")->execute();
+    }
 }

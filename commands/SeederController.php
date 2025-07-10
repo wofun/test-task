@@ -4,9 +4,7 @@ namespace app\commands;
 
 use app\components\EmptyLogger;
 use app\components\faker_data_generators\Post as PostGenerator;
-use app\components\faker_data_generators\PostVisitor as PostVisitorGenerator;
 use app\components\faker_data_generators\User as UserGenerator;
-use app\components\faker_data_generators\PostTrack as PostTrackGenerator;
 use app\helpers\DbHelper;
 use app\models\AuthAssignment;
 use app\models\Post;
@@ -25,6 +23,8 @@ class SeederController extends Controller
 {
     public function init()
     {
+        parent::init();
+
         Yii::setLogger(new EmptyLogger());
         DbHelper::disableForeignKeyChecks();
     }
@@ -142,15 +142,16 @@ class SeederController extends Controller
     public function actionPostsVisitors()
     {
         $tableName = PostVisitor::tableName();
-        $dataGenerator = new PostVisitorGenerator;
 
         $this->truncateTable($tableName);
+
+        PostVisitor::dropIndexesAndForeignKeys();
 
         $inserted = 0;
         echo "Seeding the {$tableName} table ";
 
         foreach (
-            $dataGenerator($amountPerBatch = 25000, [
+            $this->getPostVisitorBatch($amountPerBatch = 100000, [
                 'postIdFrom' => Post::find()->min('id'),
                 'postIdTo' =>  Post::find()->max('id'),
                 'userIdFrom' => User::find()->min('id'),
@@ -165,6 +166,9 @@ class SeederController extends Controller
                 $inserted += count($batch);
                 if ($inserted % 100000 === 0) {
                     echo '.';
+                    if ($inserted % 1000000 === 0) {
+                        // echo '';
+                    }
                 }
             } catch (Exception $e) {
                 echo 'Batch insert error: ' . StringHelper::truncate($e->getMessage(), 110) . PHP_EOL;
@@ -172,11 +176,37 @@ class SeederController extends Controller
         }
         echo PHP_EOL;
 
+        PostVisitor::addIndexesAndForeignKeys();
+
         $this->showInsertedInfo($tableName, $inserted);
 
-        $this->updatePostsVisitorsCount();
-
         return ExitCode::OK;
+    }
+
+
+    private function getPostVisitorBatch(int $amountPerBatch = 1000, array $options = [])
+    {
+        $data = [];
+        for ($i = $options['postIdFrom']; $i <= $options['postIdTo']; $i++) {
+            $visitorsCount = 0;
+            $userId = rand($options['userIdFrom'], $options['userIdTo'] - 150);
+            for ($k = $userId; $k < $userId + rand(100, 150); $k++) {
+                $visitorsCount++;
+                $data[] = [
+                    'id_post' => $i,
+                    'id_visitor' => $k,
+                    'view_at' => date('Y-m-d H:i:s', time()),
+                ];
+                if (count($data) === $amountPerBatch) {
+                    yield $data;
+                    $data = [];
+                }
+            }
+            Yii::$app->db->createCommand("UPDATE " . Post::tableName() . " SET visitors_count = {$visitorsCount} WHERE id = {$i}")->execute();
+        }
+        if (!empty($data)) {
+            yield $data;
+        }
     }
 
     /**
@@ -187,15 +217,16 @@ class SeederController extends Controller
     public function actionPostsTrack()
     {
         $tableName = PostTrack::tableName();
-        $dataGenerator = new PostTrackGenerator();
 
         $this->truncateTable($tableName);
+
+        PostTrack::dropIndexesAndForeignKeys();
 
         $inserted = 0;
         echo "Seeding the {$tableName} table ";
 
         foreach (
-            $dataGenerator(
+            $this->getPostTrackBatch(
                 $amountPerBatch = 25000,
                 [
                     'postIdFrom' => Post::find()->min('id'),
@@ -222,9 +253,41 @@ class SeederController extends Controller
 
         $this->showInsertedInfo($tableName, $inserted);
 
-        $this->updatePostsSubscribersCount();
+        PostTrack::addIndexesAndForeignKeys();
 
         return ExitCode::OK;
+    }
+
+
+    private function getPostTrackBatch(int $amountPerBatch = 1000, array $options = [])
+    {
+        $data = [];
+        for ($i = $options['postIdFrom']; $i <= $options['postIdTo']; $i++) {
+            $subscribersCount = 0;
+            $userId = rand($options['userIdFrom'], $options['userIdTo'] - 20);
+            for ($k = $userId; $k < $userId + rand(10, 20); $k++) {
+                $subscribersCount++;
+                $data[] = [
+                    'id_post' => $i,
+                    'id_user' => $k,
+                    'track_at' => date('Y-m-d H:i:s', time()),
+                ];
+                if (count($data) === $amountPerBatch) {
+                    yield $data;
+                    $data = [];
+                }
+            }
+            Yii::$app->db->createCommand("UPDATE " . Post::tableName() . " SET subscribers_count = {$subscribersCount} WHERE id = {$i}")->execute();
+        }
+        if (!empty($data)) {
+            yield $data;
+        }
+    }
+
+
+    private function showInsertedInfo($tableName, $amount)
+    {
+        echo "       " . number_format($amount) . " row" . ($amount > 1 ? 's' : null) . " inserted in the {$tableName} table \n";
     }
 
 
@@ -238,50 +301,5 @@ class SeederController extends Controller
     {
         DbHelper::truncateTable($tableName, false);
         echo "The {$tableName} table was truncated" . PHP_EOL;
-    }
-
-
-    private function updatePostsVisitorsCount()
-    {
-        $postIdFrom = Post::find()->min('id');
-        $postIdTo = Post::find()->max('id');
-
-        $i = 0;
-        echo 'Calculating posts.visitors_count column values ';
-
-        for ($id = $postIdFrom; $id <= $postIdTo; $id++) {
-            Yii::$app->db->createCommand("CALL updatePostVisitorsCount({$id})")->execute();
-            $i++;
-            if ($i % 10000 === 0) {
-                echo '.';
-            }
-        }
-
-        echo PHP_EOL;
-    }
-
-
-    private function updatePostsSubscribersCount()
-    {
-        $postIdFrom = Post::find()->min('id');
-        $postIdTo = Post::find()->max('id');
-
-        $i = 0;
-        echo 'Calculating posts.subscribers_count column values ';
-
-        for ($id = $postIdFrom; $id <= $postIdTo; $id++) {
-            Yii::$app->db->createCommand("CALL updatePostSubscribersCount({$id})")->execute();
-            $i++;
-            if ($i % 10000 === 0) {
-                echo '.';
-            }
-        }
-
-        echo PHP_EOL;
-    }
-
-    private function showInsertedInfo($tableName, $amount)
-    {
-        echo "       " . number_format($amount) . " row" . ($amount > 1 ? 's' : null) . " inserted in the {$tableName} table \n";
     }
 }
