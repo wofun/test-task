@@ -150,7 +150,7 @@ class SeederController extends Controller
         echo "Seeding the {$tableName} table ";
 
         foreach (
-            $this->getPostVisitorBatch($amountPerBatch = 100000, [
+            $this->getPostVisitorBatch($amountPerBatch = 25000, [
                 'postIdFrom' => Post::find()->min('id'),
                 'postIdTo' =>  Post::find()->max('id'),
                 'userIdFrom' => User::find()->min('id'),
@@ -218,7 +218,6 @@ class SeederController extends Controller
         $tableName = PostTrack::tableName();
 
         $this->truncateTable($tableName);
-
         PostTrack::dropIndexesAndForeignKeys();
 
         $inserted = 0;
