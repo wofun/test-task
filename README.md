@@ -69,12 +69,16 @@ sh bash.sh
 
 Run dektrium/yii2-user migrations:
 ~~~
+
 ./yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
+
 ~~~
 
 Run yii2-rbac migrations:
 ~~~
+
 ./yii migrate/up --migrationPath=@yii/rbac/migrations
+
 ~~~
 
 Run init RBAC migrations:
