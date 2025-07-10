@@ -132,8 +132,6 @@ class SeederController extends Controller
         return ExitCode::OK;
     }
 
-
-
     /**
      * This command seeds the Posts Visitors table.
      * 
@@ -145,7 +143,53 @@ class SeederController extends Controller
 
         $this->truncateTable($tableName);
 
-        PostVisitor::dropIndexesAndForeignKeys();
+        $time = time();
+        echo "Seeding the {$tableName} table ... ";
+        Yii::$app->db->createCommand("CALL seedPostsVisitors();")->execute();
+        echo PHP_EOL;
+        echo 'The process took ' . date('H:i:s', (time() - $time)) . PHP_EOL;
+
+        $this->showInsertedInfo(
+            $tableName,
+            Yii::$app->db->createCommand("SELECT COUNT(*) FROM posts_visitors;")->queryScalar()
+        );
+    }
+
+    /**
+     * This command seeds the Posts Track table.
+     * 
+     * @return int Exit code
+     */
+    public function actionPostsTrack()
+    {
+        $tableName = PostTrack::tableName();
+
+        $this->truncateTable($tableName);
+
+        $time = time();
+        echo "Seeding the {$tableName} table ... ";
+        Yii::$app->db->createCommand("CALL seedPostsTrack();")->execute();
+        echo PHP_EOL;
+        echo 'The process took ' . date('H:i:s', (time() - $time)) . PHP_EOL;
+
+        $this->showInsertedInfo(
+            $tableName,
+            Yii::$app->db->createCommand("SELECT COUNT(*) FROM posts_track;")->queryScalar()
+        );
+    }
+
+    /**
+     * This command seeds the Posts Visitors table.
+     * 
+     * @return int Exit code
+     */
+    public function actionPostsVisitorsOLD()
+    {
+        $tableName = PostVisitor::tableName();
+
+        $this->truncateTable($tableName);
+
+        // PostVisitor::dropIndexesAndForeignKeys();
 
         $inserted = 0;
         echo "Seeding the {$tableName} table ";
@@ -176,7 +220,7 @@ class SeederController extends Controller
         }
         echo PHP_EOL;
 
-        PostVisitor::addIndexesAndForeignKeys();
+        // PostVisitor::addIndexesAndForeignKeys();
 
         $this->showInsertedInfo($tableName, $inserted);
 
@@ -214,13 +258,13 @@ class SeederController extends Controller
      * 
      * @return int Exit code
      */
-    public function actionPostsTrack()
+    public function actionPostsTrackOLD()
     {
         $tableName = PostTrack::tableName();
 
         $this->truncateTable($tableName);
 
-        PostTrack::dropIndexesAndForeignKeys();
+        // PostTrack::dropIndexesAndForeignKeys();
 
         $inserted = 0;
         echo "Seeding the {$tableName} table ";
@@ -253,7 +297,7 @@ class SeederController extends Controller
 
         $this->showInsertedInfo($tableName, $inserted);
 
-        PostTrack::addIndexesAndForeignKeys();
+        // PostTrack::addIndexesAndForeignKeys();
 
         return ExitCode::OK;
     }
