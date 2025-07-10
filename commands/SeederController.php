@@ -144,10 +144,8 @@ class SeederController extends Controller
 
         $this->truncateTable($tableName);
 
-        PostVisitor::dropIndexesAndForeignKeys();
-
-        $inserted = 0;
         echo "Seeding the {$tableName} table ";
+        $inserted = 0;
 
         foreach (
             $this->getPostVisitorBatch($amountPerBatch = 25000, [
@@ -174,8 +172,6 @@ class SeederController extends Controller
             }
         }
         echo PHP_EOL;
-
-        PostVisitor::addIndexesAndForeignKeys();
 
         $this->showInsertedInfo($tableName, $inserted);
 
@@ -218,7 +214,6 @@ class SeederController extends Controller
         $tableName = PostTrack::tableName();
 
         $this->truncateTable($tableName);
-        PostTrack::dropIndexesAndForeignKeys();
 
         $inserted = 0;
         echo "Seeding the {$tableName} table ";
@@ -250,8 +245,6 @@ class SeederController extends Controller
         echo PHP_EOL;
 
         $this->showInsertedInfo($tableName, $inserted);
-
-        PostTrack::addIndexesAndForeignKeys();
 
         return ExitCode::OK;
     }
