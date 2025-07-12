@@ -49,7 +49,7 @@ rm -rf ./vendor/hail812/yii2-adminlte3/src/views
 
 RUN DOCKER
 -------------
-ONLY for MacOS chip M1 and more:
+***ONLY*** for MacOS chip M1 and more:
 ~~~
 docker compose -f docker-compose.yml -f docker-compose.arm64.yml up -d 
 ~~~
@@ -68,33 +68,29 @@ sh bash.sh
 ~~~
 
 Run dektrium/yii2-user migrations:
-~~~
-
+```
 ./yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
-
-~~~
+```
 
 Run yii2-rbac migrations:
-~~~
-
+```
 ./yii migrate/up --migrationPath=@yii/rbac/migrations
-
-~~~
+```
 
 Run init RBAC migrations:
-~~~
+```
 ./yii rbac/migrate
-~~~
+```
 
 Run app migrations:
-~~~
+```
 ./yii migrate
-~~~
+```
 
 Database seeding:
-~~~
+```
 ./yii seeder
-~~~
+```
 
 Наповнення бази даних проходить відповідно до вимог ТЗ. Це тривалий процес, і може зайняти більше двох годин.
 
