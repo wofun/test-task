@@ -49,7 +49,7 @@ rm -rf ./vendor/hail812/yii2-adminlte3/src/views
 
 RUN DOCKER
 -------------
-***ONLY*** for MacOS chip M1 and more:
+**ONLY** for MacOS chip M1 and more:
 ~~~
 docker compose -f docker-compose.yml -f docker-compose.arm64.yml up -d 
 ~~~

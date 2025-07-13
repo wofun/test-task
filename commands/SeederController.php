@@ -13,7 +13,7 @@ use app\models\PostVisitor;
 use app\models\Profile;
 use app\models\User;
 use Exception;
-
+use Generator;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use Yii;
@@ -69,7 +69,7 @@ class SeederController extends Controller
 
         $this->truncateTable(AuthAssignment::tableName());
         $this->truncateTable(Profile::tableName());
-        $this->truncateTable($tableName, true);
+        $this->truncateTable($tableName);
 
         echo "Seeding the {$tableName} table ";
         $inserted = 0;
@@ -85,7 +85,7 @@ class SeederController extends Controller
         }
         echo PHP_EOL;
 
-        $this->showInsertedInfo($tableName, $inserted);
+        $this->displayResultInfo($tableName, $inserted);
 
         return ExitCode::OK;
     }
@@ -106,7 +106,7 @@ class SeederController extends Controller
         $tableName = Post::tableName();
         $dataGenerator = new PostGenerator($amount);
 
-        $this->truncateTable($tableName, true);
+        $this->truncateTable($tableName);
 
         echo "Seeding the {$tableName} table ";
         $inserted = 0;
@@ -127,7 +127,7 @@ class SeederController extends Controller
         }
         echo PHP_EOL;
 
-        $this->showInsertedInfo($tableName, $inserted);
+        $this->displayResultInfo($tableName, $inserted);
 
         return ExitCode::OK;
     }
@@ -144,28 +144,28 @@ class SeederController extends Controller
 
         $this->truncateTable($tableName);
 
-        echo "Seeding the {$tableName} table ";
+        $countToInsert = Post::find()->sum('visitors_count');
+
+        $progressPercentInTens = 0;
         $inserted = 0;
 
+        echo "Seeding the {$tableName} table ";
+
         foreach (
-            $this->getPostVisitorBatch($amountPerBatch = 25000, [
-                'postIdFrom' => Post::find()->min('id'),
-                'postIdTo' =>  Post::find()->max('id'),
-                'userIdFrom' => User::find()->min('id'),
-                'userIdTo' => User::find()->max('id'),
-            ]) as $batch
+            $this->getPostVisitorBatch(
+                $amountPerBatch = 25000,
+                Post::find()->min('id'),
+                Post::find()->max('id'),
+                User::find()->min('id'),
+                User::find()->max('id')
+            ) as $batch
         ) {
-            if (empty($batch)) {
-                continue;
-            }
             try {
                 Yii::$app->db->createCommand()->batchInsert($tableName, $columns = array_keys($batch[0]), $batch)->execute();
                 $inserted += count($batch);
-                if ($inserted % 100000 === 0) {
+                if ($inserted % 300000 === 0) {
                     echo '.';
-                    if ($inserted % 1000000 === 0) {
-                        // echo '';
-                    }
+                    $this->displayProgressPercentageInTens($countToInsert, $inserted, $progressPercentInTens);
                 }
             } catch (Exception $e) {
                 echo 'Batch insert error: ' . StringHelper::truncate($e->getMessage(), 110) . PHP_EOL;
@@ -173,22 +173,22 @@ class SeederController extends Controller
         }
         echo PHP_EOL;
 
-        $this->showInsertedInfo($tableName, $inserted);
+        $this->displayResultInfo($tableName, $inserted);
 
         return ExitCode::OK;
     }
 
 
-    private function getPostVisitorBatch(int $amountPerBatch = 1000, array $options = [])
+
+    private function getPostVisitorBatch(int $amountPerBatch = 1000, int $postIdFrom, int $postIdTo, int $userIdFrom, int $userIdTo): Generator
     {
         $data = [];
-        for ($i = $options['postIdFrom']; $i <= $options['postIdTo']; $i++) {
-            $visitorsCount = 0;
-            $userId = rand($options['userIdFrom'], $options['userIdTo'] - 150);
-            for ($k = $userId; $k < $userId + rand(100, 150); $k++) {
-                $visitorsCount++;
+        for ($postId = $postIdFrom; $postId <= $postIdTo; $postId++) {
+            $visitorsCount = Yii::$app->db->createCommand("SELECT visitors_count FROM " . Post::tableName() . " WHERE id = :id")->bindValue('id', $postId)->queryScalar();
+            $userId = rand($userIdFrom, $userIdTo - $visitorsCount);
+            for ($k = $userId; $k < $userId + $visitorsCount; $k++) {
                 $data[] = [
-                    'id_post' => $i,
+                    'id_post' => $postId,
                     'id_visitor' => $k,
                     'view_at' => date('Y-m-d H:i:s', time()),
                 ];
@@ -197,7 +197,6 @@ class SeederController extends Controller
                     $data = [];
                 }
             }
-            Yii::$app->db->createCommand("UPDATE " . Post::tableName() . " SET visitors_count = {$visitorsCount} WHERE id = {$i}")->execute();
         }
         if (!empty($data)) {
             yield $data;
@@ -215,18 +214,20 @@ class SeederController extends Controller
 
         $this->truncateTable($tableName);
 
+        $countToInsert = Post::find()->sum('subscribers_count');
+
+        $progressPercentInTens = 0;
         $inserted = 0;
+
         echo "Seeding the {$tableName} table ";
 
         foreach (
             $this->getPostTrackBatch(
                 $amountPerBatch = 25000,
-                [
-                    'postIdFrom' => Post::find()->min('id'),
-                    'postIdTo' => Post::find()->max('id'),
-                    'userIdFrom' => User::find()->min('id'),
-                    'userIdTo' => User::find()->max('id'),
-                ]
+                Post::find()->min('id'),
+                Post::find()->max('id'),
+                User::find()->min('id'),
+                User::find()->max('id')
             ) as $batch
         ) {
             if (empty($batch)) {
@@ -237,6 +238,7 @@ class SeederController extends Controller
                 $inserted += count($batch);
                 if ($inserted % 100000 === 0) {
                     echo '.';
+                    $this->displayProgressPercentageInTens($countToInsert, $inserted, $progressPercentInTens);
                 }
             } catch (Exception $e) {
                 echo 'Batch insert error: ' . StringHelper::truncate($e->getMessage(), 110) . PHP_EOL;
@@ -244,22 +246,21 @@ class SeederController extends Controller
         }
         echo PHP_EOL;
 
-        $this->showInsertedInfo($tableName, $inserted);
+        $this->displayResultInfo($tableName, $inserted);
 
         return ExitCode::OK;
     }
 
 
-    private function getPostTrackBatch(int $amountPerBatch = 1000, array $options = [])
+    private function getPostTrackBatch(int $amountPerBatch = 1000, int $postIdFrom, int $postIdTo, int $userIdFrom, int $userIdTo): Generator
     {
         $data = [];
-        for ($i = $options['postIdFrom']; $i <= $options['postIdTo']; $i++) {
-            $subscribersCount = 0;
-            $userId = rand($options['userIdFrom'], $options['userIdTo'] - 20);
-            for ($k = $userId; $k < $userId + rand(10, 20); $k++) {
-                $subscribersCount++;
+        for ($postId = $postIdFrom; $postId <= $postIdTo; $postId++) {
+            $subscribersCount = Yii::$app->db->createCommand("SELECT subscribers_count FROM " . Post::tableName() . " WHERE id = :id")->bindValue('id', $postId)->queryScalar();
+            $userId = rand($userIdFrom, $userIdTo - $subscribersCount);
+            for ($k = $userId; $k < $userId + $subscribersCount; $k++) {
                 $data[] = [
-                    'id_post' => $i,
+                    'id_post' => $postId,
                     'id_user' => $k,
                     'track_at' => date('Y-m-d H:i:s', time()),
                 ];
@@ -268,19 +269,40 @@ class SeederController extends Controller
                     $data = [];
                 }
             }
-            Yii::$app->db->createCommand("UPDATE " . Post::tableName() . " SET subscribers_count = {$subscribersCount} WHERE id = {$i}")->execute();
         }
         if (!empty($data)) {
             yield $data;
         }
     }
 
-
-    private function showInsertedInfo($tableName, $amount)
+    /**
+     * Displays an information about inserted data to the table
+     * 
+     * @param string $tableName
+     * @param int $count number of inserted data
+     * 
+     */
+    private function displayResultInfo($tableName, $count)
     {
-        echo "       " . number_format($amount) . " row" . ($amount > 1 ? 's' : null) . " inserted in the {$tableName} table \n";
+        echo "       " . number_format($count) . " row" . ($count > 1 ? 's' : null) . " inserted in the {$tableName} table \n";
     }
 
+
+    /**
+     * Displays a percentage of progress
+     * 
+     * @param int $totalCount
+     * @param int $insertedCount
+     * @param int $currentPercentInTens
+     */
+    private function displayProgressPercentageInTens(int $totalCount, int $insertedCount, int &$currentPercentInTens = 0)
+    {
+        $currentPercent = floor($insertedCount  * 100 / $totalCount);
+        if (floor($currentPercent / 10) > $currentPercentInTens) {
+            $currentPercentInTens = floor($currentPercent / 10);
+            echo "{$currentPercent}%";
+        }
+    }
 
     /**
      * Truncate a table and show the appropriate message
@@ -288,61 +310,9 @@ class SeederController extends Controller
      * @param string $tableName
      * @param bool $disableForeignKeyChecks 
      */
-    private function truncateTable(string $tableName, bool $disableForeignKeyChecks = false)
+    private function truncateTable(string $tableName)
     {
         DbHelper::truncateTable($tableName, false);
         echo "The {$tableName} table was truncated" . PHP_EOL;
     }
-
-
-
-
-    /**
-     * This command seeds the Posts Visitors table.
-     * 
-     * @return int Exit code
-     */
-    /*  public function _actionPostsVisitors()
-    {
-        $tableName = PostVisitor::tableName();
-
-        $this->truncateTable($tableName);
-
-        $time = time();
-        PostVisitor::dropIndexesAndForeignKeys();
-        echo "Seeding the {$tableName} table ... ";
-        Yii::$app->db->createCommand("CALL seedPostsVisitors();")->execute();
-        echo PHP_EOL;
-
-        PostVisitor::addIndexesAndForeignKeys();
-        echo 'The process took ' . date('H:i:s', (time() - $time)) . PHP_EOL;
-
-        $this->showInsertedInfo(
-            $tableName,
-            Yii::$app->db->createCommand("SELECT COUNT(*) FROM posts_visitors;")->queryScalar()
-        );
-    } */
-
-    /**
-     * This command seeds the Posts Track table.
-     * 
-     * @return int Exit code
-     */
-    /* public function _actionPostsTrack()
-    {
-        $tableName = PostTrack::tableName();
-
-        $this->truncateTable($tableName);
-
-        $time = time();
-        echo "Seeding the {$tableName} table ... ";
-        Yii::$app->db->createCommand("CALL seedPostsTrack();")->execute();
-        echo PHP_EOL;
-        echo 'The process took ' . date('H:i:s', (time() - $time)) . PHP_EOL;
-
-        $this->showInsertedInfo(
-            $tableName,
-            Yii::$app->db->createCommand("SELECT COUNT(*) FROM posts_track;")->queryScalar()
-        );
-    } */
 }

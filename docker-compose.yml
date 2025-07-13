@@ -16,6 +16,8 @@ services:
     platform: linux/amd64
     restart: always
     container_name: g7s-task-db
+    command: 
+      - '--disable-log-bin'
     volumes:
         - mysql-data:/var/lib/mysql
         - ./runtime/logs:/var/log/mysql
@@ -24,6 +26,7 @@ services:
         MYSQL_DATABASE: ${DB_DATABASE}
         MYSQL_USER: ${DB_USERNAME}
         MYSQL_PASSWORD: ${DB_PASSWORD}
+
     ports:
         - "33063:3306"
 
